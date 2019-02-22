@@ -1,21 +1,23 @@
-/* DOCUMENT modela.i
-
-  You can adjust temperature, initial conditions,
-and so on,  below.
-
+/* 
+One of 3 scripts used to model electroporation as discussed in the article: 
+Curvature-Driven Pore Growth in Charged Membranes during Charge-Pulse and Voltage-Clamp Experiments
+Biophys J. 2009 Feb 4; 96(3): 907–916.
+doi: 10.1016/j.bpj.2008.10.035
+Article authors: Jens Kroeger, Dan Vernon, Martin Grant
+Script author: Jens Kroeger
+Revision date: February 21, 2019
+Free for use, copy and modify with proper citation.
 */
-palette, "gray.gp"
-
-
-k_BT=0.5   // Tc is around 0.5 apparently
-MCS=1000
 
 
 
-random_seed,.1234567
-// initialize T = 0
+
+//		Import libraries
+
 // get gaussian random number generator (random_n)
 #include "random.i"
+
+//		Define functions
 
 func laplacian(mat)
 {
@@ -53,13 +55,19 @@ func lap2(mat)
 	return(de2/DEL_X/DEL_X)
 }
 
-//Declaration of main variables
 
+//		Declare constants and variables with corresponding units
+
+
+//Declaration of main variables
+palette, "gray.gp"
+random_seed,.1234567
+k_BT=0.5   // Tc is around 0.5 apparently
+MCS=1000
 time=20000;
 radius=100;
 fixedradius=40.0;
 DEL_X=1.0/sqrt(2.0);
-
 center=int(radius/2);
 rad=array(0.5,[1,radius]);
 densityofholes=array(0.0,[2,radius+20,radius+20]);
@@ -70,7 +78,6 @@ voltageevolution=array(0.0,[1,time]);
 equilibriumdensityevolution=array(0.0,[1,time]);
 voidevolution=array(0.0,[1,time]);
 domain=array(0.0,[2,radius+20,radius+20]);
-
 holesaverageevolution=array(0.0,[1,time]);
 equilibriumdensity=array(1.0,[1,radius]);
 
