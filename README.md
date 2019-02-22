@@ -1,6 +1,12 @@
 # electroporation
 Langevin model of membrane electroporation coded in Yorick
 
+This repository contains the scripts used to obtain the results published in the article:
+Curvature-Driven Pore Growth in Charged Membranes during Charge-Pulse and Voltage-Clamp Experiments
+in: Biophys J. 2009 Feb 4; 96(3): 907–916.
+doi: 10.1016/j.bpj.2008.10.035
+Authors: Jens Kroeger, Dan Vernon and Martin Grant
+
 We find that curvature-driven growth of pores in electrically charged membranes correctly reproduces charge-pulse experiments. 
 Our model, consisting of a Langevin equation for the time dependence of the pore radius coupled to an ordinary differential equation 
 for the number of pores, captures the statistics of the pore population and its effect on the membrane conductance. The calculated pore 
