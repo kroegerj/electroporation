@@ -19,42 +19,6 @@ Free for use, copy and modify with proper citation.
 
 //		Define functions
 
-func laplacian(mat)
-{
-	// near neighbours
-	de=4.0*(roll(mat,[1,0])+roll(mat,[-1,0])+roll(mat,[0,1])+roll(mat,[0,-1]))
-	// next near neighbours
-	de+=1.0*(roll(mat,[1,1])+roll(mat,[-1,1])+roll(mat,[-1,-1])+roll(mat,[1,-1]))
-	de -= 20.0*mat // center point
-	return(de/DEL_X/DEL_X/6.0)
-}
-
-func grad(mat)
-
-{
-
-	// near neighbours
-	de=roll(mat,1)-roll(mat,-1);
-	de(center)=epsilon1;	
-	return(de/DEL_X/2.0)
-}
-
-func lap(mat)
-{	// near neighbours
-	de=roll(mat,1)+roll(mat,-1)-2.0*mat;
-	de(center)=epsilon2;
-	return(de/DEL_X/DEL_X)
-}
-
-func lap2(mat)
-{	// near neighbours
-	de=(roll(mat,1)+roll(mat,-1)-2.0*mat)/DEL_X/DEL_X;
-	de(center)=epsilon2;
-	
-	de2=roll(de,1)+roll(de,-1)-2.0*de;
-	return(de2/DEL_X/DEL_X)
-}
-
 
 //		Declare constants and variables with corresponding units
 
