@@ -1,8 +1,12 @@
-/* DOCUMENT modela.i
-
-  You can adjust temperature, initial conditions,
-and so on,  below.
-
+/* 
+One of 3 scripts used to model electroporation as discussed in the article: 
+Curvature-Driven Pore Growth in Charged Membranes during Charge-Pulse and Voltage-Clamp Experiments
+Biophys J. 2009 Feb 4; 96(3): 907–916.
+doi: 10.1016/j.bpj.2008.10.035
+Article authors: Jens Kroeger, Dan Vernon, Martin Grant
+Script author: Jens Kroeger
+Revision date: February 21, 2019
+Free for use, copy and modify with proper citation.
 */
 // initialize T = 0
 // get gaussian random number generator (random_n)
@@ -72,48 +76,39 @@ densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
 
 for(t=1;t<=time;t++){
 
-holesdensityaverage=0.0;
+	holesdensityaverage=0.0;
 
-for(i=1;i<=radius;i++){holesdensityaverage=holesdensityaverage+densityofholes(i);}
-holesdensityaverage=holesdensityaverage/radius;
+	for(i=1;i<=radius;i++){holesdensityaverage=holesdensityaverage+densityofholes(i);}
+	holesdensityaverage=holesdensityaverage/radius;
 
-/* Update of voltage across the membrane. */
+	/* Update of voltage across the membrane. */
 
-voltage=25.8*log(calciumout/calciumin);
+	voltage=25.8*log(calciumout/calciumin);
 
-/* Various scenarios for calcium flow and conduction through the membrane. */
+	/* Various scenarios for calcium flow and conduction through the membrane. */
 
-calciumin=calciumin+deltat*conductanceperdensity*holesdensityaverage*(voltage-equilibriumcurrentvoltage);
+	calciumin=calciumin+deltat*conductanceperdensity*holesdensityaverage*(voltage-equilibriumcurrentvoltage);
+	voltage=25.8*log(calciumout/calciumin);
+	K=alpha*exp((voltage/equilibriumelectroporationvoltage)^2.0+beta*freenergy);
+	equilibriumdensity=N0*exp(q*(voltage/equilibriumelectroporationvoltage)^2.0+beta*freenergy);
+	densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
 
-voltage=25.8*log(calciumout/calciumin);
+	/* Boundary conditions and evolution for monomers axis directors. */
 
-K=alpha*exp((voltage/equilibriumelectroporationvoltage)^2.0+beta*freenergy);
+	n(center)=n0;
+	n(1)=0.0;
+	n(radius)=0.0;
+	n=n-deltat*(hsquared^2.0*lap2(n)+4.0*(hsquared-lambdasquared)*lap(n)+4.0*n);
+	densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
 
-equilibriumdensity=N0*exp(q*(voltage/equilibriumelectroporationvoltage)^2.0+beta*freenergy);
+	/* Record of time evolution of various quantities. */
 
-densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
-
-/* Boundary conditions and evolution for monomers axis directors. */
-
-n(center)=n0;
-n(1)=0.0;
-n(radius)=0.0;
-
-n=n-deltat*(hsquared^2.0*lap2(n)+4.0*(hsquared-lambdasquared)*lap(n)+4.0*n);
-
-densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
-
-
-/* Record of time evolution of various quantities. */
-
-
-holesaverageevolution(t-1)=holesdensityaverage;
-holesatrimevolution(t-1)=densityofholes(center-1);
-voltageevolution(t-1)=voltage;
-equilibriumdensityevolution(t-1)=equilibriumdensity(center-1);
-
-freenergy=kappas/2.0*(lambdasquared*((grad(n)+splay)^2.0)+(hsquared*lap(n)/2.0+n)^2.0-lambdasquared*splay^2.0);
-}
+	holesaverageevolution(t-1)=holesdensityaverage;
+	holesatrimevolution(t-1)=densityofholes(center-1);
+	voltageevolution(t-1)=voltage;
+	equilibriumdensityevolution(t-1)=equilibriumdensity(center-1);
+	freenergy=kappas/2.0*(lambdasquared*((grad(n)+splay)^2.0)+(hsquared*lap(n)/2.0+n)^2.0-lambdasquared*splay^2.0);
+	}
 
 holesatrimevolution(t-1)=holesatrimevolution(t-2);
 voltageevolution(t-1)=voltageevolution(t-2);
@@ -122,9 +117,9 @@ equilibriumdensityevolution(t-1)=equilibriumdensityevolution(t-2);
 
 
 for(i=1;i<=radius;i++){
-height(i)=height(i-1)+hsquared/2.0*grad(n)(i);}
+	height(i)=height(i-1)+hsquared/2.0*grad(n)(i);}
 
-
+//		Plot results
 
 window, 1;
 palette, "yarg.gp";
