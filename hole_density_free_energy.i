@@ -13,7 +13,7 @@ and so on,  below.
 
 //		 Declare constants and variables with corresponding units
 
-
+random_seed,.1234567
 k_BT=0.5   // Tc is around 0.5 apparently
 MCS=1000
 radius=100;
