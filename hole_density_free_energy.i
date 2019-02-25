@@ -4,51 +4,22 @@
 and so on,  below.
 
 */
-palette, "gray.gp"
+// initialize T = 0
+// get gaussian random number generator (random_n)
+
+//		Import libraries
+
+#include "random.i"
+
+//		 Declare constants and variables with corresponding units
 
 
 k_BT=0.5   // Tc is around 0.5 apparently
 MCS=1000
-
-
-
-random_seed,.1234567
-// initialize T = 0
-// get gaussian random number generator (random_n)
-#include "random.i"
-
-func grad(mat)
-
-{
-
-	// near neighbours
-	de=roll(mat,1)-roll(mat,-1);
-	de(center)=epsilon1;	
-	return(de/DEL_X/2.0)
-}
-
-func lap(mat)
-{	// near neighbours
-	de=roll(mat,1)+roll(mat,-1)-2.0*mat;
-	de(center)=epsilon2;
-	return(de/DEL_X/DEL_X)
-}
-
-func lap2(mat)
-{	// near neighbours
-	de=(roll(mat,1)+roll(mat,-1)-2.0*mat)/DEL_X/DEL_X;
-	de(center)=epsilon2;
-	
-	de2=roll(de,1)+roll(de,-1)-2.0*de;
-	return(de2/DEL_X/DEL_X)
-}
-
-
 radius=100;
 fixedradius=40.0;
 DEL_X=0.75;
 time=40000; 
-
 height=array(0.0,[1,radius]);
 n=array(0.0,[1,radius]);
 freenergy=array(0.0,[1,radius]);
@@ -60,15 +31,12 @@ holesatrimevolution=array(0.0,[1,time]);
 voltageevolution=array(0.0,[1,time]);
 equilibriumdensityevolution=array(0.0,[1,time]);
 energyevolution=array(0.0,[1,time]);
-
 holesaverageevolution=array(0.0,[1,time]);
 equilibriumdensity=array(1.0,[1,radius]);
 
 
 for(i=1;i<=radius;i++){
-rad(i)=abs(i-center)*DEL_X;}
-
-
+	rad(i)=abs(i-center)*DEL_X;}
 
 n0=1.0;
 N0=1.5e5;
@@ -76,7 +44,6 @@ kappas=10.0;//de facon a ce que f(0)\sim 10 dyne/cm en accord avec Kuzmin et al.
 epsilon1=0.02;
 epsilon2=0.009;
 deltat=0.001;
-
 hsquared=5.0;//5.0 nm^2 d'apres Kuzmin et al.
 lambdasquared=8.0;//en accord avec Kuzmin et al. (2005) si \lambda^2<h_s^2
 splay=-0.1;// units are 1/nm from Kozlovsky (2002)
@@ -84,38 +51,24 @@ beta=0.502027//in terms of cm/dynes at room temperature.
 conductanceperdensity=3.77e-10;//in pScm^2;
 q=2.46; // d'apres Debruin
 alpha=100.0;//units in cm^{-1}ms^{-1}
-
-
-
 equilibriumelectroporationvoltage=70.0;
 equilibriumcurrentvoltage=1.0; //en mV
-
 calciumout=0.75; 
 //C_o min=C_i*exp(equilibriumcurrentvoltage/25.8)=0.0575 for
 // C_i=0.01 and equilibriumcurrentvoltage=45.0;
 calciumin=0.01;
-
-
-
-
 /* Initial voltage across membrane. */
-
 voltage=25.8*log(calciumout/calciumin);
-
-
 /* Boundary conditions for surface tension calculations. */
-
 n(center)=n0;
 n(1)=0.0;
 n(radius)=0.0;
-
 equilibriumdensity=N0*exp(q*(voltage/equilibriumelectroporationvoltage)^2.0+beta*freenergy);
-
 /* Evolution of monomers axis director n. */
-
 n=n-deltat*(hsquared^2.0*lap2(n)+4.0*(hsquared-lambdasquared)*lap(n)+4.0*n);
 densityofholes=densityofholes+deltat*(K-K*densityofholes/equilibriumdensity);
 
+//		Loop over time for a given set of parameters
 
 for(t=1;t<=time;t++){
 
